@@ -50,7 +50,7 @@ for compile_language in compile_languages:
 	for compile_option in compile_options:
 		jobname = compile_language.split(',')[0]+'_'+compile_option.replace(',','_')
 		runcommand('lualatex  --interaction=nonstopmode --jobname='+jobname+' --output-directory='+tmpdir+' "\def\UseOption{'+compile_language+','+compile_option+'}\input{contents}"')
-		html_output += "<p><a href='"+jobname+".pdf'>"+beautify_abbreviation(compile_option)+"</a></p>"
+		html_output += "<p><a target='_parent' href='"+jobname+".pdf'>"+beautify_abbreviation(compile_option)+"</a></p>"
 html_output += "</body></html>"
 
 html_file = open('../index.html','w')
