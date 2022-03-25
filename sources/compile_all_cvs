@@ -1,5 +1,7 @@
 #!/usr/bin/python
-# coding=utf-8
+from sys import exit
+import subprocess
+
 
 compile_languages = ['en,node,nono','es,node,nono','de,nono','no,node','dk,node']
 compile_options = ['it','tea','pol','ant','tea,ant','tea,pol,ant','tea,pol,ant,it']
@@ -17,25 +19,13 @@ beautify_dic = {
 	'ant' : 'Anthropology'
 }
 
+
 def beautify_abbreviation(abbreviation):
 	return_string = ""
 	for item in abbreviation.split(","):
 		if item in beautify_dic:
 			return_string += beautify_dic[item] + " + "
 	return return_string.strip(' +')
-
-from sys import exit
-from commands import getstatusoutput
-
-def runcommand(command,exit_on_failure=True):
-	output = getstatusoutput(command)
-	if (output[0] != 0 and exit_on_failure==True):
-		print command
-		print output[1]
-		exit()
-	return output
-
-
 
 
 html_output = "<html><head><title>My CVs</title></head>"
@@ -46,17 +36,17 @@ from shutil import rmtree
 
 tmpdir = mkdtemp()
 for compile_language in compile_languages:
-	html_output += "<h3>"+beautify_abbreviation(compile_language)+"</h3>"
+	html_output += f"<h3>{beautify_abbreviation(compile_language)}</h3>"
 	for compile_option in compile_options:
 		jobname = compile_language.split(',')[0]+'_'+compile_option.replace(',','_')
-		runcommand('lualatex  --interaction=nonstopmode --jobname='+jobname+' --output-directory='+tmpdir+' "\def\UseOption{'+compile_language+','+compile_option+'}\input{contents}"')
-		html_output += "<p><a target='_parent' href='"+jobname+".pdf'>"+beautify_abbreviation(compile_option)+"</a></p>"
+		subprocess.run(f"lualatex  --interaction=nonstopmode --jobname={jobname} --output-directory={tmpdir} \"\\def\\UseOption{{ {compile_language},{compile_option}}}\\input{{contents}}\"", shell=True)
+		html_output += f"<p><a target='_parent' href='{jobname}.pdf'>{beautify_abbreviation(compile_option)}</a></p>"
 html_output += "</body></html>"
 
 html_file = open('../index.html','w')
 html_file.write(html_output)
 html_file.close()
 
-runcommand("mv "+tmpdir+"/*pdf ../")
+subprocess.run(f"mv {tmpdir}/*pdf ../", shell=True)
 
 rmtree(tmpdir)
