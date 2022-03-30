@@ -14,6 +14,7 @@
 
 \usepackage{xspace}
 
+
 \def\translator#1#2{\expandafter\def\csname #1\endcsname{#2\xspace}}
 
 \input{translations}
@@ -37,7 +38,7 @@
   colorlinks = true,
   urlcolor = black,
   pdfauthor = {\name},
-  pdfkeywords = {\opt{it}{programming, IT,}\opt{ant}{anthropology,}},
+  pdfkeywords = {programming, IT, anthropology,},
   pdftitle = {\name: Curriculum Vitae},
   pdfsubject = {Curriculum Vitae},
   pdfpagemode = UseNone
@@ -83,23 +84,13 @@
 
 \usepackage{graphicx}
 
+\title{\publications}
+
 \begin{document}
 
 \setlanguage
 
-\input{overview}
-
-\input{education}
-
-\input{languages}
-
-\opt{tea,ant,it}{\input{publications}}
-
-\opt{pol}{\input{organization_experience}}
-
-\opt{tea}{\input{teaching_experience}}
-
-\opt{it}{\input{it_experience}}
+\input{publications}
 
 \medskip
 

@@ -45,15 +45,21 @@ from shutil import rmtree
 tmpdir = mkdtemp()
 for compile_language in compile_languages:
     html_output += f"<h3>{beautify_abbreviation(compile_language)}</h3>"
+    language = compile_language.split(",")[0]
     for compile_option in compile_options:
         jobname = (
-            compile_language.split(",")[0] + "_" + compile_option.replace(",", "_")
+            language + "_" + compile_option.replace(",", "_")
         )
         subprocess.run(
             f'lualatex  --interaction=nonstopmode --jobname={jobname} --output-directory={tmpdir} "\\def\\UseOption\u007b{compile_language},{compile_option}}}\\input{{contents}}"',
             shell=True,
         )
         html_output += f"<p><a target='_parent' href='{jobname}.pdf'>{beautify_abbreviation(compile_option)}</a></p>"
+    subprocess.run(
+        f'lualatex  --interaction=nonstopmode --jobname=publications_{language} --output-directory={tmpdir} "\\def\\UseOption\u007b{compile_language},tea,pol,ant,it}}\\input{{publication_list}}"',
+        shell=True,
+    )
+    html_output += f"<p><a target='_parent' href='publications_{language}.pdf'>Publications</a></p>"
 html_output += "</body></html>"
 
 html_file = open("../index.html", "w")
